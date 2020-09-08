@@ -2,20 +2,25 @@
 #include <SDL.h>
 #include <stdio.h>
 
-//Starts up SDL and creates window
-bool init();
-//Loads media
-bool loadMedia();
-//Frees media and shuts down SDL
-void close();
-
 //Screen dimension constants
 const int SCREEN_WIDTH = 1080;
 const int SCREEN_HEIGHT = 720;
+
+//Starts up SDL and creates window
+bool init();
+
+//Loads media
+bool loadMedia();
+
+//Frees media and shuts down SDL
+void close();
+
 //The window we'll be rendering to
 SDL_Window* gWindow = NULL;
+
 //The surface contained by the window
 SDL_Surface* gScreenSurface = NULL;
+
 //The image we will load and show on the screen
 SDL_Surface* gTitleImage = NULL;
 
@@ -29,20 +34,29 @@ int main( int argc, char* args[] ){
         if( !loadMedia() ){
             printf( "Failed to load media!\n" );
         }else{
-            //Apply the image
-            SDL_BlitSurface( gTitleImage, NULL, gScreenSurface, NULL );
+            //Main loop flag
+            bool quit = false;
 
-			//Update the surface
-            SDL_UpdateWindowSurface( gWindow );
+            //Event handler
+            SDL_Event e;
 
-			//Wait fives seconds
-			for(int x = 0; x < 5; x++){
-				printf("One second has passed count %d\n", x); //DEBUG STATEMENT
-				SDL_Delay( 1000 );
+			//While application is running
+            while( !quit ){
+                //Handle events on queue
+                while( SDL_PollEvent( &e ) != 0 ){
+                    //User requests quit (Xs out the window)
+                    if( e.type == SDL_QUIT ){
+                        quit = true;
+                    }
+                }
+				//Apply the image
+				SDL_BlitSurface( gTitleImage, NULL, gScreenSurface, NULL );
+
+				//Update the surface
+				SDL_UpdateWindowSurface( gWindow );
 			}
         }
     }
-
 	printf("Exting window\n"); //DEBUG STATEMENT
     //Free resources and close SDL
     close();
