@@ -19,32 +19,31 @@ SDL_Surface* gScreenSurface = NULL;
 //The image we will load and show on the screen
 SDL_Surface* gTitleImage = NULL;
 
-int main( int argc, char* args[] )
-{
+int main( int argc, char* args[] ){
+	printf("Game launched\n"); //DEBUG STATEMENT 
     //Start up SDL and create window
-    if( !init() )
-    {
+    if( !init() ){
         printf( "Failed to initialize!\n" );
-    }
-    else
-    {
+    }else{
         //Load media
-        if( !loadMedia() )
-        {
+        if( !loadMedia() ){
             printf( "Failed to load media!\n" );
-        }
-        else
-        {
+        }else{
             //Apply the image
             SDL_BlitSurface( gTitleImage, NULL, gScreenSurface, NULL );
 
 			//Update the surface
             SDL_UpdateWindowSurface( gWindow );
-			//Wait five seconds
-            SDL_Delay( 5000 );
+
+			//Wait fives seconds
+			for(int x = 0; x < 5; x++){
+				printf("One second has passed count %d\n", x); //DEBUG STATEMENT
+				SDL_Delay( 1000 );
+			}
         }
     }
 
+	printf("Exting window\n"); //DEBUG STATEMENT
     //Free resources and close SDL
     close();
 
@@ -56,22 +55,17 @@ bool init(){
     bool success = true;
 
     //Initialize SDL
-    if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
-    {
+    if( SDL_Init( SDL_INIT_VIDEO ) < 0 ){
         printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
         success = false;
-    }
-    else
-    {
+    }else{
         //Create window
         gWindow = SDL_CreateWindow( "Total Recall 2", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
-        if( gWindow == NULL )
-        {
+        if( gWindow == NULL ){
             printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
             success = false;
         }
-        else
-        {
+        else{
             //Get window surface
             gScreenSurface = SDL_GetWindowSurface( gWindow );
         }
@@ -86,8 +80,7 @@ bool loadMedia(){
 
     //Load splash image
     gTitleImage = SDL_LoadBMP( "Resources/TitleScreen.bmp" );
-    if( gTitleImage == NULL )
-    {
+    if( gTitleImage == NULL ){
         printf( "Unable to load image %s! SDL Error: %s\n", "Resources/TitleScreen.bmp", SDL_GetError() );
         success = false;
     }
